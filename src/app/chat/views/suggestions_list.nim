@@ -25,7 +25,7 @@ QtObject:
     result.setup
 
   proc rowData(self: SuggestionsList, index: int, column: string): string {.slot.} =
-    if (index >= self.suggestions.len - 1):
+    if (index > self.suggestions.len - 1):
       return
     let suggestion = self.suggestions[index]
     case column:

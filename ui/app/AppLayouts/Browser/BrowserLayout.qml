@@ -596,7 +596,7 @@ Rectangle {
                                 width: Math.min(childrenRect.width, parent.width - addBookmarkBtn.width - spacing)
                                 delegate: BookmarkButton {
                                     text: name
-                                    onClicked: Qt.openUrlExternally(url)
+                                    onClicked: currentWebView.url = url
                                 }
                             }
 
