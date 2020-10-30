@@ -227,9 +227,17 @@ rcc:
 	./ui/generate-rcc.sh
 	rcc --binary ui/resources.qrc -o ./resources.rcc
 
-ifneq ($(INFURA_TOKEN),)
- NIM_PARAMS += -d:INFURA_TOKEN:"$(INFURA_TOKEN)"
+# default token is a free-tier token with limited capabilities and usage
+# limits; our docs should include directions for community contributor to setup
+# their own Infura account and token instead of relying on this default token
+# during development
+DEFAULT_TOKEN := df3bd604ac4b4073823e72f6617fc7db
+INFURA_TOKEN ?= $(DEFAULT_TOKEN)
+ifeq ($(INFURA_TOKEN),)
+ # there should always be a token defined at compile time
+ override INFURA_TOKEN = $(DEFAULT_TOKEN)
 endif
+NIM_PARAMS += -d:INFURA_TOKEN:"$(INFURA_TOKEN)"
 
 nim_status_client: | $(DOTHERSIDE) $(STATUSGO) $(QRCODEGEN) $(FLEETFILE) rcc deps
 	echo -e $(BUILD_MSG) "$@" && \
