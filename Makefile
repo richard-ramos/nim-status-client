@@ -215,17 +215,21 @@ $(FLEETFILE): | deps
 		| jq --indent 4 --sort-keys . \
 		> fleets.json
 
-remove-fleet: 
+remove-fleet:
 	rm -f fleets.json
 
 update-fleets: remove-fleet $(FLEETFILE)
-  
+
 rcc:
 	echo -e $(BUILD_MSG) "resources.rcc"
 	rm -f ./resources.rcc
 	rm -f ./ui/resources.qrc
 	./ui/generate-rcc.sh
 	rcc --binary ui/resources.qrc -o ./resources.rcc
+
+ifneq ($(INFURA_KEY),)
+ NIM_PARAMS += -d:INFURA_KEY:"$(INFURA_KEY)"
+endif
 
 nim_status_client: | $(DOTHERSIDE) $(STATUSGO) $(QRCODEGEN) $(FLEETFILE) rcc deps
 	echo -e $(BUILD_MSG) "$@" && \

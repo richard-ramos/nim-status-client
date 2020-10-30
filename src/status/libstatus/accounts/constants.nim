@@ -16,6 +16,34 @@ const PATH_DEFAULT_WALLET* = PATH_WALLET_ROOT & "/0"
 # EIP1581 Chat Key 0, the default whisper key
 const PATH_WHISPER* = PATH_EIP_1581 & "/0'/0"
 
+# set via `nim c` param `-d:INFURA_KEY:"[key]"``; should be set in CI/release builds
+const INFURA_KEY {.strdefine.} = ""
+# allow runtime override via environment variable; core contributors can set a
+# release key in this way for local development
+let INFURA_KEY_ENV = $getEnv("INFURA_KEY")
+# embed a free tier key with limited capabilities and usage; our docs should
+# include directions for community contributor to setup their own Infura
+# account/key instead of relying on this fallback key during development
+const INFURA_KEY_FALLBACK = "df3bd604ac4b4073823e72f6617fc7db"
+
+let INFURA_KEY_RESOLVED =
+  if INFURA_KEY_ENV != "":
+    INFURA_KEY_ENV
+  elif INFURA_KEY != "":
+    INFURA_KEY
+  else:
+    INFURA_KEY_FALLBACK
+
+#--- BEG for spot-testing purposes only, remove before PR is out of draft
+#--- !!! DON'T ECHO THE KEY ITSELF !!!
+if INFURA_KEY_RESOLVED == INFURA_KEY:
+  echo "!!!!!!!!!!!!\nusing INFURA_KEY defined during compilation\n!!!!!!!!!!!!"
+elif INFURA_KEY_RESOLVED == INFURA_KEY_ENV:
+  echo "!!!!!!!!!!!!\nusing INFURA_KEY supplied at runtime via env var\n!!!!!!!!!!!!"
+elif INFURA_KEY_RESOLVED == INFURA_KEY_FALLBACK:
+  echo "!!!!!!!!!!!!\nusing INFURA_KEY embedded in source as a fallback\n!!!!!!!!!!!!"
+#--- END for spot-testing purposes only, remove before PR is out of draft
+
 let DEFAULT_NETWORKS* = %* [
   {
     "id": "testnet_rpc",
@@ -26,7 +54,7 @@ let DEFAULT_NETWORKS* = %* [
       "DataDir": "/ethereum/testnet_rpc",
       "UpstreamConfig": {
         "Enabled": true,
-        "URL": "https://ropsten.infura.io/v3/7230123556ec4a8aac8d89ccd0dd74d7"
+        "URL": "https://ropsten.infura.io/v3/" & INFURA_KEY_RESOLVED
       }
     }
   },
@@ -39,7 +67,7 @@ let DEFAULT_NETWORKS* = %* [
       "DataDir": "/ethereum/rinkeby_rpc",
       "UpstreamConfig": {
         "Enabled": true,
-        "URL": "https://rinkeby.infura.io/v3/7230123556ec4a8aac8d89ccd0dd74d7"
+        "URL": "https://rinkeby.infura.io/v3/" & INFURA_KEY_RESOLVED
       }
     }
   },
@@ -65,7 +93,7 @@ let DEFAULT_NETWORKS* = %* [
       "DataDir": "/ethereum/mainnet_rpc",
       "UpstreamConfig": {
         "Enabled": true,
-        "URL": "https://mainnet.infura.io/v3/7230123556ec4a8aac8d89ccd0dd74d7"
+        "URL": "https://mainnet.infura.io/v3/" & INFURA_KEY_RESOLVED
       }
     }
   },
@@ -133,16 +161,16 @@ var NODE_CONFIG* = %* {
     "MaxMessageDeliveryAttempts": 6,
     "PFSEnabled": true,
     "VerifyENSContractAddress": "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
-    "VerifyENSURL": "https://mainnet.infura.io/v3/7230123556ec4a8aac8d89ccd0dd74d7",
+    "VerifyENSURL": "https://mainnet.infura.io/v3/" & INFURA_KEY_RESOLVED,
     "VerifyTransactionChainID": 1,
-    "VerifyTransactionURL": "https://mainnet.infura.io/v3/7230123556ec4a8aac8d89ccd0dd74d7"
+    "VerifyTransactionURL": "https://mainnet.infura.io/v3/" & INFURA_KEY_RESOLVED
   },
   "StatusAccountsConfig": {
     "Enabled": true
   },
   "UpstreamConfig": {
     "Enabled": true,
-    "URL": "https://mainnet.infura.io/v3/7230123556ec4a8aac8d89ccd0dd74d7"
+    "URL": "https://mainnet.infura.io/v3/" & INFURA_KEY_RESOLVED
   },
   "WakuConfig": {
     "BloomFilterMode": nil,
