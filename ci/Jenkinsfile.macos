@@ -53,7 +53,7 @@ pipeline {
           credentialsId: utils.getInfuraTokenCred(),
           variable: 'INFURA_TOKEN'
         )]) {
-          sh 'make INFURA_KEY=$INFURA_TOKEN V=1 nim_status_client'
+          sh 'make INFURA_TOKEN=$INFURA_TOKEN V=1 nim_status_client'
         }
       }
     }
