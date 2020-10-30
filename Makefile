@@ -233,10 +233,6 @@ rcc:
 # during development
 DEFAULT_TOKEN := df3bd604ac4b4073823e72f6617fc7db
 INFURA_TOKEN ?= $(DEFAULT_TOKEN)
-ifeq ($(INFURA_TOKEN),)
- # there should always be a token defined at compile time
- override INFURA_TOKEN = $(DEFAULT_TOKEN)
-endif
 NIM_PARAMS += -d:INFURA_TOKEN:"$(INFURA_TOKEN)"
 
 nim_status_client: | $(DOTHERSIDE) $(STATUSGO) $(QRCODEGEN) $(FLEETFILE) rcc deps

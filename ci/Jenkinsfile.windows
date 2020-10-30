@@ -63,7 +63,7 @@ pipeline {
           credentialsId: utils.getInfuraTokenCred(),
           variable: 'INFURA_TOKEN'
         )]) {
-          sh "make INFURA_TOKEN=$INFURA_TOKEN ${env.STATUS_CLIENT_ZIP}"
+          sh "make ${env.STATUS_CLIENT_ZIP}"
         }
       }
     }
