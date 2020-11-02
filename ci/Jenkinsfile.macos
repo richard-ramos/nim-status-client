@@ -47,7 +47,7 @@ pipeline {
       steps { sh 'make status-go' }
     }
 
-    stage('Client') {
+    /*stage('Client') {
       steps { 
         withCredentials([string(
           credentialsId: utils.getInfuraTokenCred(),
@@ -56,7 +56,7 @@ pipeline {
           sh 'make nim_status_client'
         }
       }
-    }
+    }*/
 
     stage('Package') { steps {
       withCredentials([
@@ -72,6 +72,10 @@ pipeline {
           credentialsId: 'macos-keychain-file',
           variable: 'MACOS_KEYCHAIN_FILE'
         ),
+        string(
+          credentialsId: utils.getInfuraTokenCred(),
+          variable: 'INFURA_TOKEN'
+        )
       ]) {
         sh 'make pkg-macos'
       }
