@@ -28,16 +28,6 @@ let INFURA_TOKEN_RESOLVED =
   else:
     INFURA_TOKEN
 
-#--- BEG for spot-testing purposes only, remove before PR is out of draft
-#--- !!! DON'T ECHO THE TOKEN ITSELF !!!
-if INFURA_TOKEN_RESOLVED == INFURA_TOKEN:
-  echo "!!!!!!!!!!!!\nusing INFURA_TOKEN defined during compilation\n!!!!!!!!!!!!"
-  echo "Was it an empty string? " & $(INFURA_TOKEN_RESOLVED == "")
-  echo "Was it the default token embedded in the Makefile? " & $(INFURA_TOKEN_RESOLVED == "df3bd604ac4b4073823e72f6617fc7db")
-elif INFURA_TOKEN_RESOLVED == INFURA_TOKEN_ENV:
-  echo "!!!!!!!!!!!!\nusing INFURA_TOKEN supplied at runtime via env var\n!!!!!!!!!!!!"
-#--- END for spot-testing purposes only, remove before PR is out of draft
-
 let DEFAULT_NETWORKS* = %* [
   {
     "id": "testnet_rpc",
