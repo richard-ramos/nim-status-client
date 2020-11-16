@@ -16,6 +16,7 @@ Item {
     property string timestamp: "20/2/2020"
     property string identicon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAGQAQMAAAC6caSPAAAABlBMVEXMzMz////TjRV2AAAAAWJLR0QB/wIt3gAAACpJREFUGBntwYEAAAAAw6D7Uw/gCtUAAAAAAAAAAAAAAAAAAAAAAAAAgBNPsAABAjKCqQAAAABJRU5ErkJggg=="
     property string username: "@jonas"
+    property string channelName: "sic-mundus"
 
     property var processClick: Backpressure.oneInTime(root, 1000, function () {
         notificationSound.play()
@@ -55,7 +56,12 @@ Item {
 
             Channel {
                 id: channelNotif
-                name: root.chatType === Constants.chatTypeOneToOne ? root.username : root.chatId
+                name: {
+                    if (root.chatType === Constants.chatTypePublic) {
+                        return root.chatId
+                    }
+                    return root.chatType === Constants.chatTypePrivateGroupChat ? root.channelName : root.username
+                }
                 lastMessage: root.message
                 timestamp: root.timestamp
                 chatType: root.chatType
@@ -114,7 +120,7 @@ Item {
         }
     }
 
-    function notifyUser(chatId, msg, messageType, chatType, timestamp, identicon, username) {
+    function notifyUser(chatId, msg, messageType, chatType, timestamp, identicon, username, channelName) {
         this.chatId = chatId
         this.message = msg
         this.messageType = parseInt(messageType, 10)
@@ -122,6 +128,7 @@ Item {
         this.timestamp = timestamp
         this.identicon = identicon
         this.username = username
+        this.channelName = channelName
         processClick()
     }
 }

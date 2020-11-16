@@ -139,10 +139,10 @@ ScrollView {
                 chatLogView.scrollToBottom(true)
             }
 
-            onMessageNotificationPushed: function(chatId, msg, messageType, chatType, timestamp, identicon, username, hasMention) {
+            onMessageNotificationPushed: function(chatId, msg, messageType, chatType, timestamp, identicon, username, hasMention, channelName) {
                 if (appSettings.notificationSetting == Constants.notifyAllMessages || 
                     (appSettings.notificationSetting == Constants.notifyJustMentions && hasMention)) {
-                        notificationWindow.notifyUser(chatId, msg, messageType, chatType, timestamp, identicon, username)
+                        notificationWindow.notifyUser(chatId, msg, messageType, chatType, timestamp, identicon, username, channelName)
                 }
             }
         }
