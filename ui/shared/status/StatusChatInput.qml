@@ -79,6 +79,10 @@ Rectangle {
         return msg
     }
 
+    function isUploadFilePressed(event) {
+        return (event.key === Qt.Key_U) && (event.modifiers & Qt.ControlModifier) && imageBtn.visible && !imageDialog.visible
+    }
+
     function onEnter(event){
         if (event.modifiers === Qt.NoModifier && (event.key === Qt.Key_Enter || event.key === Qt.Key_Return)) {
             if (emojiSuggestions.visible) {
@@ -103,6 +107,51 @@ Rectangle {
             paste = true;
         }
 
+        // ⌘B
+        if ((event.key === Qt.Key_B) && (event.modifiers & Qt.ControlModifier)) {
+            wrapSelection("**")
+            event.accepted = true
+        }
+
+        // ⌘I
+        if ((event.key === Qt.Key_I) && (event.modifiers & Qt.ControlModifier)) {
+            wrapSelection("*")
+            event.accepted = true
+        }
+
+        // ⌘⌥⇧C
+        if ((event.key === Qt.Key_C) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier) && (event.modifiers & Qt.AltModifier)) {
+            wrapSelection("```")
+            event.accepted = true
+        }
+
+        // ⌘⇧C
+        else if ((event.key === Qt.Key_C) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier)) {
+            wrapSelection("`")
+            event.accepted = true
+        }
+
+        // ⌘⌥- or ⌘⇧X
+        if (
+            ((event.key === Qt.Key_hyphen) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.AltModifier)) ||
+            ((event.key === Qt.Key_X) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
+        ) {
+            wrapSelection("~~")
+            event.accepted = true
+        }
+
+        // ⌘⇧U
+        if (isUploadFilePressed(event)) {
+            imageBtn.clicked()
+            event.accepted = true
+        }
+
+        // ⌃⌘SPACE
+        if ((event.key === Qt.Key_Space) && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.MetaModifier)) {
+            emojiBtn.clicked()
+            event.accepted = true
+        }
+
         if (event.key === Qt.Key_Down) {
             suggestionsBox.listView.incrementCurrentIndex()
             return emojiSuggestions.listView.incrementCurrentIndex()
@@ -115,6 +164,12 @@ Rectangle {
         isColonPressed = (event.key === Qt.Key_Colon) && (event.modifiers & Qt.ShiftModifier);
     }
 
+    function wrapSelection(wrapWith) {
+        if (messageInputField.selectionStart - messageInputField.selectionEnd === 0) return
+        insertInTextInput(messageInputField.selectionStart, wrapWith);
+        insertInTextInput(messageInputField.selectionEnd, wrapWith);
+        messageInputField.deselect()
+    }
 
     function onRelease(event) {
         // the text doesn't get registered to the textarea fast enough
@@ -151,7 +206,7 @@ Rectangle {
         }
 
         messageInputField.remove(0, messageInputField.length);
-        insertInTextInput(0, Emoji.parse(words.join('&nbsp;'), '26x26'));
+        insertInTextInput(0, Emoji.parse(words.join('&nbsp;'), '72x72'));
     }
 
     // since emoji length is not 1 we need to match that position that TextArea returns
@@ -159,7 +214,7 @@ Rectangle {
     function extrapolateCursorPosition() {
         // we need only the message part to be html
         const text = chatsModel.plainText(Emoji.deparse(messageInputField.text));
-        const plainText = Emoji.parse(text, '26x26');
+        const plainText = Emoji.parse(text, '72x72');
 
         var bracketEvent = false;
         var length = 0;
@@ -248,7 +303,7 @@ Rectangle {
             .replace(shortname, encodedCodePoint)
             .replace(/ /g, "&nbsp;");
         messageInputField.remove(0, messageInputField.cursorPosition);
-        insertInTextInput(0, Emoji.parse(newMessage, '26x26'));
+        insertInTextInput(0, Emoji.parse(newMessage, '72x72'));
         emojiSuggestions.close()
         emojiEvent = false
     }
@@ -380,7 +435,7 @@ Rectangle {
                 text = `${left} @${aliasName} ${right}`
             }
 
-            messageInputField.text = hasEmoji ? Emoji.parse(text, "26x26") : text
+            messageInputField.text = hasEmoji ? Emoji.parse(text, "72x72") : text
             messageInputField.cursorPosition = lastAtPosition + aliasName.length + 2
             suggestionsBox.suggestionsModel.clear()
         }
@@ -581,6 +636,7 @@ Rectangle {
                 bottomPadding: 12
                 Keys.onPressed: onEnter(event)
                 Keys.onReleased: onRelease(event) // gives much more up to date cursorPosition
+                Keys.onShortcutOverride: event.accepted = isUploadFilePressed(event)
                 leftPadding: 0
                 background: Rectangle {
                     color: "transparent"

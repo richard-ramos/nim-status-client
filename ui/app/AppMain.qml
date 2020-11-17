@@ -25,6 +25,27 @@ RowLayout {
         }
     }
 
+    Keys.onPressed: {
+        if ((event.modifiers & Qt.ControlModifier)) {
+            if (event.key == Qt.Key_1) {
+                changeAppSection(Constants.chat)
+                event.accepted = true
+            } else if (event.key == Qt.Key_2 && browserBtn.enabled) {
+                changeAppSection(Constants.browser)
+                event.accepted = true
+            } else if (event.key == Qt.Key_3 && walletBtn.enabled) {
+                changeAppSection(Constants.wallet)
+                event.accepted = true
+            } else if (event.key == Qt.Key_4) {
+                changeAppSection(Constants.profile)
+                event.accepted = true
+            } else if (event.key == Qt.Key_Comma) {
+                changeAppSection(Constants.profile)
+                event.accepted = true
+            }
+        }
+    }
+
     function changeAppSection(section) {
         let sectionId = -1
         switch (section) {

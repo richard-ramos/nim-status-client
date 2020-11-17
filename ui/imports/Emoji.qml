@@ -10,23 +10,25 @@ QtObject {
         Twemoji.twemoji.base = base
         Twemoji.twemoji.ext = ".png"
         Twemoji.twemoji.size = size
-        return Twemoji.twemoji.parse(text)
+        return Twemoji.twemoji.parse(text, {
+            attributes: function() { return { width: "20", height: "20" }}
+        })
     }
     function fromCodePoint(value) {
         return Twemoji.twemoji.convert.fromCodePoint(value)
     }
     function deparse(value){
-        return value.replace(/<img src=\"qrc:\/imports\/twemoji\/.+?" alt=\"(.+?)\" \/>/g, "$1");
+        return value.replace(/<img src=\"qrc:\/imports\/twemoji\/.+?" alt=\"(.+?)\" width=\"[0-9]*\" height=\"[0-9]*\" \/>/g, "$1");
     }
     function deparseFromParse(value) {
-        return value.replace(/<img class=\"emoji\" draggable=\"false\" alt=\"(.+?)\" src=\"qrc:\/imports\/twemoji\/.+?"\/>/g, "$1");
+        return value.replace(/<img class=\"emoji\" draggable=\"false\" alt=\"(.+?)\" src=\"qrc:\/imports\/twemoji\/.+?" width=\"[0-9]*\" height=\"[0-9]*\"\/>/g, "$1");
     }
     function hasEmoji(value) {
-        let match = value.match(/<img src=\"qrc:\/imports\/twemoji\/.+?" alt=\"(.+?)\" \/>/g)
+        let match = value.match(/<img src=\"qrc:\/imports\/twemoji\/.+?" alt=\"(.+?)\" width=\"[0-9]*\" height=\"[0-9]*\"\ \/>/g)
         return match && match.length > 0
     }
     function getEmojis(value) {
-        return value.match(/<img class=\"emoji\" draggable=\"false\" alt=\"(.+?)\" src=\"qrc:\/imports\/twemoji\/.+?"\/>/g, "$1");
+        return value.match(/<img class=\"emoji\" draggable=\"false\" alt=\"(.+?)\" src=\"qrc:\/imports\/twemoji\/.+?" width=\"[0-9]*\" height=\"[0-9]*\"\/>/g, "$1");
     }
     function getEmojiUnicode(shortname) {
         var _emoji;

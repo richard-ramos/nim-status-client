@@ -18,7 +18,6 @@ Item {
     StyledTextEdit {
         id: chatText
         textFormat: Text.RichText
-        horizontalAlignment: Text.AlignLeft
         wrapMode: Text.Wrap
         font.pixelSize: 15
         readOnly: true
@@ -47,33 +46,39 @@ Item {
             if(isEmoji) {
                 return Emoji.parse(msg, "72x72");
             } else {
-                return `<html>`+
-                    `<head>`+
-                        `<style type="text/css">`+
-                        `code {`+
-                            `background-color: #1a356b;`+
-                            `color: #FFFFFF;`+
-                            `white-space: pre;`+
-                        `}`+
-                        `p {`+
-                            `white-space: pre-wrap;`+
-                        `}`+
-                        `a {`+
-                            `color: ${isCurrentUser && !appSettings.compactMode ? Style.current.white : Style.current.textColor};`+
-                        `}`+
-                        `a.mention {`+
-                            `color: ${isCurrentUser ? Style.current.cyan : Style.current.turquoise};`+
-                        `}`+
-                        `blockquote {`+
-                            `margin: 0;`+
-                            `padding: 0;`+
-                        `}`+
-                        `</style>`+
-                    `</head>`+
-                    `<body>`+
-                        `${Emoji.parse(msg, "26x26")}`+
-                    `</body>`+
-                `</html>`;
+                return `<style type="text/css">` +
+                            `p, img, a, del, code, blockquote { margin: 0; padding: 0; }` +
+                            `code {` +
+                                `background-color: #1a356b;` +
+                                `color: #FFFFFF;` +
+                                `white-space: pre;` +
+                            `}` +
+                            `p {` +
+                                `line-height: 22px;` +
+                            `}` +
+                            `a {` +
+                                `color: ${isCurrentUser && !appSettings.compactMode ? Style.current.white : Style.current.textColor};` +
+                            `}` +
+                            `a.mention {` +
+                                `color: ${isCurrentUser ? Style.current.cyan : Style.current.turquoise};` +
+                            `}` +
+                            `del {` +
+                                `text-decoration: line-through;` +
+                            `}` +
+                            `table td {` +
+                                `padding-left: 10px;` +
+                                `color: ${isCurrentUser ? Style.current.chatReplyCurrentUser : Style.current.secondaryText};` +
+                            `}` +
+                            `table td[valign] {` +
+                                `background-color: ${isCurrentUser ? Style.current.chatReplyCurrentUser : Style.current.secondaryText};` +
+                                `height: 100%;` +
+                                `padding-left: 0;` +
+                            `}` +
+                            `.emoji {` +
+                                `vertical-align: bottom;` +
+                            `}` +
+                        `</style>` +
+                        `${Emoji.parse(msg, "72x72")}`
             }
         }
     }

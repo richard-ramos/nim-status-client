@@ -35,7 +35,7 @@ Item {
     }
 
     Rectangle {
-        property int chatVerticalPadding: 7
+        property int chatVerticalPadding: 6
         property int chatHorizontalPadding: 12
         property bool longReply: chatReply.visible && repliedMessageContent.length > 54
         property bool longChatText: chatsModel.plainText(message).length > 54
@@ -111,7 +111,6 @@ Item {
             anchors.leftMargin: chatBox.chatHorizontalPadding
             anchors.right: chatBox.longChatText ? parent.right : undefined
             anchors.rightMargin: chatBox.longChatText ? chatBox.chatHorizontalPadding : 0
-            textField.horizontalAlignment: !isCurrentUser ? Text.AlignLeft : Text.AlignRight
             textField.color: !isCurrentUser ? Style.current.textColor : Style.current.currentUserTextColor
         }
 
