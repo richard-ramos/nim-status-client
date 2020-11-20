@@ -87,6 +87,7 @@ Item {
                     notificationWindowSub.close()
                     applicationWindow.raise()
                     chatsModel.setActiveChannel(chatId)
+                    applicationWindow.requestActivate()
                 }
             }
 

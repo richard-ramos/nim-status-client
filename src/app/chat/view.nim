@@ -345,13 +345,11 @@ QtObject:
       self.messageList[msg.chatId].add(msg)
       self.messagePushed()
       if self.channelOpenTime.getOrDefault(msg.chatId, high(int64)) < msg.timestamp.parseFloat.fromUnixFloat.toUnix:
-        if msg.chatId != self.activeChannel.id:
-          let channel = self.chats.getChannelById(msg.chatId)
-          if not channel.muted:
-            self.messageNotificationPushed(msg.chatId, escape_html(msg.text), msg.messageType, channel.chatType.int, msg.timestamp, msg.identicon, msg.alias, msg.hasMention)
-        else:
-          discard self.status.chat.markMessagesSeen(msg.chatId, @[msg.id])
-          self.newMessagePushed()
+        let channel = self.chats.getChannelById(msg.chatId)
+        if not channel.muted:
+          self.messageNotificationPushed(msg.chatId, escape_html(msg.text), msg.messageType, channel.chatType.int, msg.timestamp, msg.identicon, msg.alias, msg.hasMention)
+        discard self.status.chat.markMessagesSeen(msg.chatId, @[msg.id])
+        self.newMessagePushed()
 
   proc messageEmojiReactionId(self: ChatsView, chatId: string, messageId: string, emojiId: int): string =
     if (self.messageList[chatId].getReactions(messageId) == "") :

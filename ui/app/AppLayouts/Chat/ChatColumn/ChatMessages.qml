@@ -1,5 +1,6 @@
 import QtQuick 2.13
 import QtQuick.Controls 2.13
+import QtQuick.Window 2.13
 import QtQuick.Layouts 1.13
 import QtQml.Models 2.13
 import QtGraphicalEffects 1.13
@@ -141,9 +142,11 @@ ScrollView {
             }
 
             onMessageNotificationPushed: function(chatId, msg, messageType, chatType, timestamp, identicon, username, hasMention) {
-                if (appSettings.notificationSetting == Constants.notifyAllMessages || 
-                    (appSettings.notificationSetting == Constants.notifyJustMentions && hasMention)) {
-                        notificationWindow.notifyUser(chatId, msg, messageType, chatType, timestamp, identicon, username)
+                if(applicationWindow.visibility === Window.Minimized || chatId !== chatsModel.activeChannel.id){
+                    if (appSettings.notificationSetting == Constants.notifyAllMessages || 
+                        (appSettings.notificationSetting == Constants.notifyJustMentions && hasMention)) {
+                            notificationWindow.notifyUser(chatId, msg, messageType, chatType, timestamp, identicon, username)
+                    }
                 }
             }
         }
