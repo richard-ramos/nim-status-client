@@ -348,7 +348,8 @@ QtObject:
         let channel = self.chats.getChannelById(msg.chatId)
         if not channel.muted:
           self.messageNotificationPushed(msg.chatId, escape_html(msg.text), msg.messageType, channel.chatType.int, msg.timestamp, msg.identicon, msg.alias, msg.hasMention)
-        discard self.status.chat.markMessagesSeen(msg.chatId, @[msg.id])
+        if msg.chatId == self.activeChannel.id:
+          discard self.status.chat.markMessagesSeen(msg.chatId, @[msg.id])
         self.newMessagePushed()
 
   proc messageEmojiReactionId(self: ChatsView, chatId: string, messageId: string, emojiId: int): string =
