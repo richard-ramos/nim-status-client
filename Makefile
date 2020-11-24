@@ -231,7 +231,7 @@ rcc:
 # limits; our docs should include directions for community contributor to setup
 # their own Infura account and token instead of relying on this default token
 # during development
-DEFAULT_TOKEN := df3bd604ac4b4073823e72f6617fc7db
+DEFAULT_TOKEN := 220a1abb4b6943a093c35d0ce4fb0732
 INFURA_TOKEN ?= $(DEFAULT_TOKEN)
 NIM_PARAMS += -d:INFURA_TOKEN:"$(INFURA_TOKEN)"
 
